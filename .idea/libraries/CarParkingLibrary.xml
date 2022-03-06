@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="CarParkingLibrary">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../CarParkingLibrary/out/artifacts/CarParkingLibrary_jar/CarParkingLibrary.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
