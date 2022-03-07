@@ -15,8 +15,8 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
 
     private final Scanner in;
 
-    private MultiFloorCarParking obj;
-    private ArrayList<ParkingLot> arr;
+    private final MultiFloorCarParking obj;
+    private final ArrayList<ParkingLot> arr;
 
     private final CarEntryExitTable carEntryExitTable;
 
@@ -50,9 +50,10 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
                     + " " + Billing.moneyAbbr + " per hour");
             System.out.print("Are you going to park a car? (Yes / No): ");
             String choice = in.nextLine().trim();
-            if(choice.equalsIgnoreCase("yes")) return true;
-            else if(choice.equalsIgnoreCase("no")) return false;
-            else if(choice.equals("")) System.out.println("\nYou have not entered any input! Please Enter (Yes / No)");
+            int result = BillingFunctionalities.validateChoice(choice);
+            if(result == 1) return true;
+            else if(result == 0) return false;
+            else if(result == -1) System.out.println("\nYou have not entered any input! Please Enter (Yes / No)");
             else System.out.println("\nInvalid Input! Please Enter (Yes / No)");
         }
     }
@@ -110,8 +111,10 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
             System.out.print("\nEnter Car Number(should be less than or equal to 5 characters): ");
             carNo = in.nextLine().trim();
             if(carNo.equals("")) System.out.println("\nYou have not entered any input! Please enter valid Car Number");
-            else if(carNo.length() > 5) System.out.println("\nYou have entered more than 5 characters as Car Number." +
-                    "\nPlease Enter valid Car Number(should be less than or equal to 5 characters): ");
+            else if(carNo.length() > 5) System.out.println("""
+
+                    You have entered more than 5 characters as Car Number.
+                    Please Enter valid Car Number(should be less than or equal to 5 characters):\s""");
             else break;
         }
         return carNo;
@@ -155,7 +158,7 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
         CarEntryExitMaster carEntryExitMaster = carEntryExitTable.getCarByCarNumber(carNumber);
         if(carEntryExitMaster != null) {
             CarEntryExit carEntryExit = carEntryExitMaster.getLastCarEntryExit();
-            if(carEntryExitMaster != null) {
+            if(carEntryExit != null) {
                 System.out.println("\nThis car was parked previously in the following parking place!");
                 int[] pos = carEntryExit.getPosition();
                 ParkingLot parkingLot = arr.get(pos[2]);
@@ -163,19 +166,19 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
                         + getOrdinalNumber(pos[2]) + " floor");
                 System.out.println("Last Car Entry Time: " + getTime(carEntryExit.getEntryTime()));
                 System.out.println("Last Car Exit Time: " + getTime(carEntryExit.getExitTime()));
-                pos[0]--;
-                pos[1]--;
-                int[] position = parkingLot.getNearestParkingPosition(pos[0],pos[1]);
-                pos[0] = position[0];
-                pos[1] = position[1];
-                if(pos[0] != -1 && pos[1] != -1)
+                int[] position = new int[3];
+                int[] position1 = parkingLot.getNearestParkingPosition(pos[0]-1,pos[1]-1);
+                position[0] = position1[0];
+                position[1] = position1[1];
+                position[2] = pos[2];
+                if(position[0] != -1 && pos[1] != -1)
                 {
-                    System.out.println("\nEmpty Car Parking is available in " + (pos[0]+1) + "/" + (pos[1]+1) +
+                    System.out.println("\nEmpty Car Parking is available in " + (position[0]+1) + "/" + (position[1]+1) +
                             " on " + getOrdinalNumber(pos[2]) + " floor");
                     System.out.print("Do you agree to proceed further with above parking location? ");
                     String choice = in.nextLine().trim();
                     if(choice.equalsIgnoreCase("yes")) {
-                        parkACar(parkingLot,pos,car);
+                        parkACar(parkingLot,position,car);
                         return true;
                     }
                 }
@@ -237,7 +240,7 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
             }
             else if(choice.equalsIgnoreCase("no")){
                 while (true) {
-                    System.out.println("\nDetailed Floor Map of " + getOrdinalNumber(parkingLot.getFloor()) + " Floor");
+                    System.out.println("\nDetailed Floor Map of " + getOrdinalNumber(parkingLot.getFloorNo()) + " Floor");
                     parkingLot.showModifiedParkingLot(true);
                     System.out.print("Select any one Empty Parking Place in (R/C) format: ");
                     String str = in.nextLine().trim();
@@ -274,7 +277,7 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
         System.out.println();
         System.out.println("#".repeat(170));
         System.out.println("\nDetailed Path to park the car in the given parking place " +
-                "at " + getOrdinalNumber(parkingLot.getFloor()) + " floor");
+                "at " + getOrdinalNumber(parkingLot.getFloorNo()) + " floor");
         carParking.showPathToParkACar(obj.path,parkingLot,row,col);
 
         CarInParking carInParking = new CarInParking();
@@ -283,7 +286,7 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
         CarEntryExitMaster carEntryExitMaster = carEntryExitTable.getCarByCarNumber(car.getCarNumber());
         ParkingCell parkingCell = parkingLot.getParkingCellByPosition(row,col);
         CarEntryExit carEntryExit = new CarEntryExit(parkingCell.getParkedTime(),
-                new int[]{row+1,col+1,parkingLot.getFloor()});
+                new int[]{row+1,col+1,parkingLot.getFloorNo()});
         carEntryExitMaster.addEntryExit(carEntryExit);
         System.out.println();
         System.out.println("#".repeat(170));
@@ -351,32 +354,32 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
         System.out.println();
         System.out.println("#".repeat(170));
         System.out.println("Car Position : " + (pos[0] + 1) + "/" + (pos[1] + 1) + " at " +
-                getOrdinalNumber(parkingLot.getFloor()) + " floor");
+                getOrdinalNumber(parkingLot.getFloorNo()) + " floor");
         if(parkingLot.exitACar(pos)) {
             ParkingCell parkingCell = parkingLot.getParkingCellByPosition(pos[0],pos[1]);
             long seconds = parkingCell.calculateCarParkedInSeconds();
             System.out.println("\nTotal Car Parking Time: " + seconds + " seconds");
 
-            Billing billing = new Billing(parkingCell.getParkedTime(),parkingCell.getCarExitTime(),seconds);
+            CarEntryExitMaster carEntryExitMaster = carEntryExitTable.getCarByCarNumber(car.getCarNumber());
+            CarEntryExit carEntryExit = carEntryExitMaster.getLastCarEntryExit();
+            carEntryExit.setExitTime(parkingCell.getCarExitTime());
+            Billing billing = carEntryExit.getBilling();
+            billing.setCarExitTime(parkingCell.getCarExitTime(),seconds);
             double bill = billing.getBill();
 
             System.out.printf("\nBill Amount for Parking: %.2f " + Billing.moneyAbbr, bill);
             CarParking carParking = new CarParkingImpl();
             System.out.println("\nDetailed Path to exit the car from the parking place " +
-                    "at " + getOrdinalNumber(parkingLot.getFloor()) + " floor");
+                    "at " + getOrdinalNumber(parkingLot.getFloorNo()) + " floor");
             carParking.showPathToExitACar(obj.path,parkingLot,pos[0],pos[1]);
 
             CarInParking carInParking = new CarInParking();
             carInParking.removeCar(car.getCarNumber());
 
-            CarEntryExitMaster carEntryExitMaster = carEntryExitTable.getCarByCarNumber(car.getCarNumber());
-            CarEntryExit carEntryExit = carEntryExitMaster.getLastCarEntryExit();
-            carEntryExit.setExitTime(parkingCell.getCarExitTime());
-
             parkingCell.setParkingPlaceEmpty();
         }
         System.out.println("\nCar Number " + car.getCarNumber() + " removed successfully from " +
-                getOrdinalNumber(parkingLot.getFloor()) + " floor ");
+                getOrdinalNumber(parkingLot.getFloorNo()) + " floor ");
         System.out.println();
         System.out.println("#".repeat(170));
     }
@@ -406,8 +409,7 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
             System.out.println("#".repeat(170));
             for (int i = obj.floors - 1; i >= 0; --i) {
                 System.out.println("\nDetailed Floor Map of " + getOrdinalNumber(i) + " Floor");
-                if(i != 0 ) arr.get(i).showModifiedParkingLot(false);
-                else arr.get(i).showModifiedParkingLot(true);
+                arr.get(i).showModifiedParkingLot(i == 0);
             }
             System.out.println();
             System.out.println("#".repeat(170));
@@ -443,8 +445,7 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
                 System.out.println("If you want to move back to main menu, Enter 'back'");
                 continue;
             }
-            Car car = carTable.getCarByCarNo(carNumber);
-            return car;
+            return carTable.getCarByCarNo(carNumber);
         }
     }
 
@@ -463,15 +464,26 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
     private void showCarParkingHistory(Car car) {
         System.out.println("\nParking History:");
         CarEntryExitMaster carEntryExitMaster = carEntryExitTable.getCarByCarNumber(car.getCarNumber());
+        if(carEntryExitMaster == null) {
+            System.out.println("No Parking History Available");
+            System.out.println();
+            System.out.println("#".repeat(170));
+            return;
+        }
         for (CarEntryExit carEntryExit:carEntryExitMaster.getCarEntryExits()) {
             LocalTime time1 = carEntryExit.getEntryTime();
             LocalTime time2 = carEntryExit.getExitTime();
-            if(time1 == null) System.out.print("00:00:00  ");
-            else System.out.print(getTime(time1) + "  ");
-            if(time2 == null ) System.out.print("00:00:00  ");
-            else System.out.print(getTime(time2) + "  ");
+            if(time1 == null) System.out.print("00:00:00");
+            else System.out.print(getTime(time1));
+            System.out.print(" - ");
+            if(time2 == null ) System.out.print("00:00:00");
+            else System.out.print(getTime(time2));
+            System.out.print(" - ");
             int[] pos = carEntryExit.getPosition();
-            System.out.println(pos[0] + "/" + pos[1] + " in " + getOrdinalNumber(pos[2]) + " floor");
+            System.out.print(pos[0] + "/" + pos[1] + " in " + getOrdinalNumber(pos[2]) + " floor - ");
+            Billing billing = carEntryExit.getBilling();
+            System.out.printf("%.2f" + " " + Billing.moneyAbbr, billing.getBill());
+            System.out.println();
         }
         System.out.println();
         System.out.println("#".repeat(170));
