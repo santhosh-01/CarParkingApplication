@@ -11,11 +11,10 @@ public class MainClass {
     public static void main(String[] args) {
 
         CarParkingMessage app = new CarParkingMessage();
-        CarParkingFunctionalities appFunctionalities = new CarParkingFunctionalitiesImpl(
-                new PropertiesClass("resources/config.properties"));
+        CarParkingMenu carParkingMenu = new CarParkingMenu(new PropertiesClass("resources/config.properties"));
 
         app.welcome();
-        CarParkingMenu.showMenu(appFunctionalities);
+        carParkingMenu.showMenu();
         app.quitMessage();
 
     }
