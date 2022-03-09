@@ -1,8 +1,8 @@
 package util;
 
-public class Validation {
+public class Validator {
 
-    private Validation() {
+    private Validator() {
     }
 
     public static int validateInteger(String num, int lowerLimit, int upperLimit, String validateFor) {
