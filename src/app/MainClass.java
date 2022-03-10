@@ -1,8 +1,6 @@
 package app;
 
 import model.PropertiesClass;
-import service.CarParkingFunctionalities;
-import service.CarParkingFunctionalitiesImpl;
 import service.CarParkingMenu;
 import service.CarParkingMessage;
 
