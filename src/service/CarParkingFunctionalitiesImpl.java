@@ -10,6 +10,7 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
 
     private final Scanner in;
     private final CarParking carParking;
+    private final CarParkingMessage carParkingMessage;
 
     private final MultiFloorCarParking obj;
     private final ArrayList<ParkingLot> arr;
@@ -19,6 +20,7 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
         this.obj = obj;
         arr = this.obj.getParkingLots();
         this.carParking = carParking;
+        carParkingMessage = new CarParkingMessage();
     }
 
     @Override
@@ -28,32 +30,27 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
 
         carParking.generatePathToParkACar(parkingLot,pos);
 
-        System.out.println("\nCar Parking Place : " + (pos[0] + 1) + "/" + (pos[1] + 1) + " at " +
-                getOrdinalNumber(parkingLot.getFloorNo()) + " floor");
+        carParkingMessage.showParkingPlace(parkingLot,pos);
 
-        System.out.println("\nCar Number " + car.getCarNumber() + " parked successfully in " +
-                getOrdinalNumber(parkingLot.getFloorNo()) + " floor ");
+        carParkingMessage.showParkingSuccess(parkingLot,car);
         hashLine();
     }
 
     @Override
     public void generateBill(ParkingLot parkingLot, int[] pos, Car car) {
         hashLine();
-        System.out.println("\nCar Position : " + (pos[0] + 1) + "/" + (pos[1] + 1) + " at " +
-                getOrdinalNumber(parkingLot.getFloorNo()) + " floor");
+        carParkingMessage.showParkingPlace(parkingLot,pos);
 
         ParkingCell parkingCell = carParking.exitACarFromPosition(parkingLot,pos,car);
 
         long seconds = carParking.calculateParkingTimeInSeconds(parkingCell);
         System.out.println("\nTotal Car Parking Time: " + seconds + " seconds");
 
-        double bill = carParking.generateBill(parkingCell,car,seconds);
-        System.out.printf("\nBill Amount for Parking: %.2f " + Billing.moneyAbbr + "\n", bill);
+        System.out.println(carParking.generateBill(parkingCell,car,seconds));
 
         carParking.generatePathToExitACar(parkingLot,pos);
 
-        System.out.println("\nCar Number " + car.getCarNumber() + " removed successfully from " +
-                getOrdinalNumber(parkingLot.getFloorNo()) + " floor ");
+        carParkingMessage.showCarExitSuccess(parkingLot,car);
 
         hashLine();
     }
