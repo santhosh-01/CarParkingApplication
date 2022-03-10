@@ -1,25 +1,14 @@
 package service;
 
 import model.Car;
+import model.MultiFloorCarParking;
 import model.ParkingLot;
+
+import java.util.ArrayList;
 
 public interface CarParkingFunctionalities {
 
-    Car acceptCarDetailsToPark();
-
-    boolean confirmCarDetails(Car car);
-
-    boolean checkAndSuggestCarParkingFloor(Car car);
-
-    ParkingLot suggestAndGetCarParkingLot();
-
-    int[] suggestAndGetParkingPlace(ParkingLot parkingLot);
-
     void generateReceipt(ParkingLot parkingLot, int[] pos, Car car);
-
-    Car acceptCarDetailsToExit();
-
-    boolean confirmCarDetailsForExit(Car car);
 
     void generateBill(ParkingLot parkingLot, int[] pos, Car car);
 
@@ -27,5 +16,5 @@ public interface CarParkingFunctionalities {
 
     void showAllDetailedParkingSlots();
 
-    void getCarHistory();
+    void getCarInfoAndParkingHistory(Car car, DataPrinter dataPrinter);
 }
