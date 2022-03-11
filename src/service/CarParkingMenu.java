@@ -1,12 +1,8 @@
 package service;
 
-import model.Car;
-import model.MultiFloorCarParking;
-import model.ParkingLot;
-import model.PropertiesClass;
+import model.*;
 import util.Validator;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class CarParkingMenu {
@@ -27,7 +23,7 @@ public class CarParkingMenu {
         obj = new MultiFloorCarParking(prop);
 
         carParking = new CarParkingImpl(obj, dataProvider,dataPrinter);
-        appFunctionalities = new CarParkingFunctionalitiesImpl(obj, carParking);
+        appFunctionalities = new CarParkingFunctionalitiesImpl(obj, dataProvider,dataPrinter,carParking);
     }
 
     public void showMenu() {
@@ -65,19 +61,19 @@ public class CarParkingMenu {
                 appFunctionalities.showAllDetailedParkingSlots();
             }
             else if(choice == 5) {
-                Car car = carParking.getValidCarNumberInParkingHistory();
+                Car car = carParking.getValidCarInParkingHistory();
                 if(car == null) continue;
                 appFunctionalities.getCarInfoAndParkingHistory(car,dataPrinter);
             }
             else if(choice == 6) {
+                String carNo = carParking.getValidCarNumberInParkingHistory();
+                if(carNo == null) continue;
+                appFunctionalities.getBillingHistoryByCarNumber(carNo);
+            }
+            else if(choice == 7){
                 break;
             }
         }
-    }
-
-    private void hashLine() {
-        System.out.println();
-        System.out.println("#".repeat(170));
     }
 
 }
