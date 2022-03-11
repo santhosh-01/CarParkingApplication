@@ -30,7 +30,7 @@ public class CarParkingMenu {
         while (true) {
             msg.showMenu();
             String ch = in.nextLine().trim();
-            int choice = Validator.validateInteger(ch,1,6);
+            int choice = Validator.validateInteger(ch,1,7);
             if(choice == 1) {
                 if (!obj.isParkingAvailable()) {
                     System.out.println("\nSorry! Parking Full!");
