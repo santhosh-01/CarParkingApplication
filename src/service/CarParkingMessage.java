@@ -20,7 +20,8 @@ public class CarParkingMessage {
         System.out.println("3. Show Floor Maps");
         System.out.println("4. Show Detailed Floor Maps");
         System.out.println("5. Car History");
-        System.out.println("6. Quit Application");
+        System.out.println("6. Billing History");
+        System.out.println("7. Quit Application");
         System.out.print("Please Choose any of the above option: ");
     }
 
