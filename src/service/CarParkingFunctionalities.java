@@ -1,10 +1,7 @@
 package service;
 
 import model.Car;
-import model.MultiFloorCarParking;
 import model.ParkingLot;
-
-import java.util.ArrayList;
 
 public interface CarParkingFunctionalities {
 
@@ -17,4 +14,7 @@ public interface CarParkingFunctionalities {
     void showAllDetailedParkingSlots();
 
     void getCarInfoAndParkingHistory(Car car, DataPrinter dataPrinter);
+
+    void getBillingHistoryByCarNumber(String carNo);
+
 }
