@@ -15,7 +15,8 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
     private final MultiFloorCarParking obj;
     private final ArrayList<ParkingLot> arr;
 
-    public CarParkingFunctionalitiesImpl(MultiFloorCarParking obj, CarParking carParking){
+    public CarParkingFunctionalitiesImpl(MultiFloorCarParking obj, DataProvider dataProvider,
+                                         DataPrinter dataPrinter, CarParking carParking){
         in = new Scanner(System.in);
         this.obj = obj;
         arr = this.obj.getParkingLots();
@@ -43,10 +44,8 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
 
         ParkingCell parkingCell = carParking.exitACarFromPosition(parkingLot,pos,car);
 
-        long seconds = carParking.calculateParkingTimeInSeconds(parkingCell);
-        System.out.println("\nTotal Car Parking Time: " + seconds + " seconds");
-
-        System.out.println(carParking.generateBill(parkingCell,car,seconds));
+        System.out.println();
+        System.out.println(carParking.generateBill(parkingCell,car).toString());
 
         carParking.generatePathToExitACar(parkingLot,pos);
 
@@ -92,6 +91,18 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
         hashLine();
         dataPrinter.showCarInformation(car);
         carParking.showCarParkingHistory(car);
+        hashLine();
+    }
+
+    @Override
+    public void getBillingHistoryByCarNumber(String carNo) {
+        hashLine();
+        System.out.println("\nBilling History:");
+        System.out.println();
+        ArrayList<Billing> billings = carParking.getBillingsByCarNo(carNo);
+        for (Billing billing:billings) {
+            System.out.println(billing.toString());
+        }
         hashLine();
     }
 
