@@ -23,7 +23,7 @@ public class CarParkingMenu {
         obj = new MultiFloorCarParking(prop);
 
         carParking = new CarParkingImpl(obj, dataProvider,dataPrinter);
-        appFunctionalities = new CarParkingFunctionalitiesImpl(obj, dataProvider,dataPrinter,carParking);
+        appFunctionalities = new CarParkingFunctionalitiesImpl(obj,carParking);
     }
 
     public void showMenu() {
