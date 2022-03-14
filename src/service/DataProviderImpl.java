@@ -79,7 +79,7 @@ public class DataProviderImpl implements DataProvider{
 
     @Override
     public String getSuggestedParkingFloorConfirmation(int floorNo) {
-        System.out.println("\nParking Place is Available in " + getOrdinalNumber(floorNo) + " floor");
+        System.out.println("\nParking Place is Available in " + OrdinalNumber.getOrdinalNo(floorNo) + " floor");
         System.out.print("Do you want to proceed further? (Yes / No): ");
         return in.nextLine().trim();
     }
@@ -94,7 +94,7 @@ public class DataProviderImpl implements DataProvider{
 
     @Override
     public String getCarParkingPlace(ParkingLot parkingLot) {
-        System.out.println("\nDetailed Floor Map of " + getOrdinalNumber(parkingLot.getFloorNo()) + " Floor");
+        System.out.println("\nDetailed Floor Map of " + OrdinalNumber.getOrdinalNo(parkingLot.getFloorNo()) + " Floor");
         parkingLot.showModifiedParkingLot(true);
         System.out.print("Select any one Empty Parking Place in (R/C) format: ");
         return in.nextLine().trim();
@@ -122,13 +122,7 @@ public class DataProviderImpl implements DataProvider{
     }
 
     @Override
-    public String getCarNumberForBillingHistory() {
-        System.out.print("\nEnter Car Number to fetch billing history ['back' for Main menu]: ");
-        return in.nextLine();
-    }
-
-    @Override
-    public String getCarNumberForCarHistory() {
+    public String getCarNumberForHistory() {
         System.out.print("\nEnter Car Number to fetch history ['back' for Main menu]: ");
         return in.nextLine();
     }
@@ -137,10 +131,5 @@ public class DataProviderImpl implements DataProvider{
     public String getFloorNumber() {
         System.out.print("Select any of the above floor number: ");
         return in.nextLine().trim();
-    }
-
-    private String getOrdinalNumber(int floorNo) {
-        if(floorNo == 0) return "Ground";
-        else return OrdinalNumber.getOrdinalNo(floorNo);
     }
 }
