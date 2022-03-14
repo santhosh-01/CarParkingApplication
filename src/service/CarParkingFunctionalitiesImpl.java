@@ -15,8 +15,7 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
     private final MultiFloorCarParking obj;
     private final ArrayList<ParkingLot> arr;
 
-    public CarParkingFunctionalitiesImpl(MultiFloorCarParking obj, DataProvider dataProvider,
-                                         DataPrinter dataPrinter, CarParking carParking){
+    public CarParkingFunctionalitiesImpl(MultiFloorCarParking obj, CarParking carParking){
         in = new Scanner(System.in);
         this.obj = obj;
         arr = this.obj.getParkingLots();
@@ -59,7 +58,7 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
         while (true) {
             hashLine();
             for (int i = obj.floors - 1; i >= 0; --i) {
-                System.out.println("\nFloor Map of " + getOrdinalNumber(i) + " Floor");
+                System.out.println("\nFloor Map of " + OrdinalNumber.getOrdinalNo(i) + " Floor");
                 arr.get(i).showParkingLot();
             }
             hashLine();
@@ -75,7 +74,7 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
         while (true) {
             hashLine();
             for (int i = obj.floors - 1; i >= 0; --i) {
-                System.out.println("\nDetailed Floor Map of " + getOrdinalNumber(i) + " Floor");
+                System.out.println("\nDetailed Floor Map of " + OrdinalNumber.getOrdinalNo(i) + " Floor");
                 arr.get(i).showModifiedParkingLot(i == 0);
             }
             hashLine();
@@ -111,11 +110,6 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
 
 
     // Utility Methods
-
-    private String getOrdinalNumber(int floorNo) {
-        if(floorNo == 0) return "Ground";
-        else return OrdinalNumber.getOrdinalNo(floorNo);
-    }
 
     private void hashLine() {
         System.out.println();
