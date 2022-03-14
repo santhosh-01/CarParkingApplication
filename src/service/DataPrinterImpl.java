@@ -139,6 +139,11 @@ public class DataPrinterImpl implements DataPrinter {
         System.out.println("\nDuplicate Car! Given Car Number is already in parking");
     }
 
+    @Override
+    public void givenCarNumberEmpty() {
+        System.out.println("\nGiven Car Number is Empty!");
+    }
+
 
     private String getTime(LocalTime time) {
         return time.getHour() + ":" + time.getMinute() + ":" + time.getSecond();
