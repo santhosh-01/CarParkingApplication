@@ -122,6 +122,12 @@ public class DataProviderImpl implements DataProvider{
     }
 
     @Override
+    public String getCarNumberForBillingHistory() {
+        System.out.print("\nEnter Car Number to fetch billing history ['back' for Main menu]: ");
+        return in.nextLine();
+    }
+
+    @Override
     public String getCarNumberForCarHistory() {
         System.out.print("\nEnter Car Number to fetch history ['back' for Main menu]: ");
         return in.nextLine();
