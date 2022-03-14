@@ -90,7 +90,10 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
     public void getCarInfoAndParkingHistory(Car car, DataPrinter dataPrinter) {
         hashLine();
         dataPrinter.showCarInformation(car);
-        carParking.showCarParkingHistory(car);
+        System.out.println("\nParking History:");
+        if(!carParking.showCarParkingHistory(car)) {
+            System.out.println("No Parking History Available");
+        }
         hashLine();
     }
 
