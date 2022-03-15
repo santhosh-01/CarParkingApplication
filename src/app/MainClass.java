@@ -8,12 +8,12 @@ public class MainClass {
 
     public static void main(String[] args) {
 
-        CarParkingMessage app = new CarParkingMessage();
+        CarParkingMessage message = new CarParkingMessage();
         CarParkingMenu carParkingMenu = new CarParkingMenu(new PropertiesClass("resources/config.properties"));
 
-        app.welcome();
+        message.welcome();
         carParkingMenu.showMenu();
-        app.quitMessage();
+        message.quitMessage();
 
     }
 
