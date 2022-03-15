@@ -8,31 +8,32 @@ import java.util.Scanner;
 public class CarParkingMenu {
 
     private final Scanner in;
-    private final CarParkingMessage msg;
+    private final CarParkingMessage message;
 
-    private final MultiFloorCarParking obj;
+    private final MultiFloorCarParking multiFloorCarParking;
     private final CarParkingFunctionalities appFunctionalities;
     private final DataPrinter dataPrinter;
     private final CarParking carParking;
 
     public CarParkingMenu(PropertiesClass prop) {
         in = new Scanner(System.in);
-        msg = new CarParkingMessage();
+        message = new CarParkingMessage();
         DataProvider dataProvider = new DataProviderImpl();
         dataPrinter = new DataPrinterImpl();
-        obj = new MultiFloorCarParking(prop);
+        multiFloorCarParking = new MultiFloorCarParking(prop);
 
-        carParking = new CarParkingImpl(obj, dataProvider,dataPrinter);
-        appFunctionalities = new CarParkingFunctionalitiesImpl(obj,carParking);
+        carParking = new CarParkingImpl(multiFloorCarParking, dataProvider,dataPrinter);
+        appFunctionalities = new CarParkingFunctionalitiesImpl(multiFloorCarParking,carParking);
     }
 
     public void showMenu() {
         while (true) {
-            msg.showMenu();
+            message.showMenu();
             String ch = in.nextLine().trim();
             int choice = Validator.validateInteger(ch,1,7);
+            if(choice == -1) continue;
             if(choice == 1) {
-                if (!obj.isParkingAvailable()) {
+                if (!multiFloorCarParking.isParkingAvailable()) {
                     System.out.println("\nSorry! Parking Full!");
                     continue;
                 }
@@ -50,7 +51,7 @@ public class CarParkingMenu {
                 if(car == null) continue;
                 String carNo = car.getCarNumber();
                 if(!carParking.confirmCarDetailsForExit(car)) continue;
-                ParkingLot parkingLot = obj.getParkingLotWithCarNumber(carNo);
+                ParkingLot parkingLot = multiFloorCarParking.getParkingLotWithCarNumber(carNo);
                 int[] pos = parkingLot.getCarNumberPosition(carNo);
                 appFunctionalities.generateBill(parkingLot,pos,car);
             }
