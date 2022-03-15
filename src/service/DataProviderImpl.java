@@ -12,7 +12,7 @@ public class DataProviderImpl implements DataProvider{
     private final Scanner in = new Scanner(System.in);
 
     @Override
-    public boolean acceptBillingAmount() {
+    public boolean billingAmountAcceptance() {
         while (true) {
             System.out.println("\nBilling Amount for parking a car: " + Billing.billingAmountPerHour
                     + " " + Billing.moneyAbbr + " per hour");
@@ -26,49 +26,57 @@ public class DataProviderImpl implements DataProvider{
     }
 
     @Override
-    public String validateAndGetCarModel() {
+    public String getCarModel() {
         String carModel;
-        while (true) {
-            System.out.print("Enter Car Model Number: ");
-            carModel = in.nextLine().trim();
-            if(carModel.equals("")) System.out.println("\nYou have not entered any input! " +
-                    "Please enter valid Car Model");
-            else break;
+        System.out.print("Enter Car Model Number: ");
+        carModel = in.nextLine().trim();
+        if(carModel.equals("")) {
+            System.out.println("\nYou have not entered any input! " +
+                               "Please enter valid Car Model");
+            return null;
         }
-        return carModel;
+        else {
+            return carModel;
+        }
     }
 
     @Override
-    public String validateAndGetCarBrand() {
+    public String getCarBrand() {
         String carBrand;
-        while (true) {
-            System.out.print("Enter Car Brand: ");
-            carBrand = in.nextLine().trim();
-            if(carBrand.equals("")) System.out.println("\nYou have not entered any input! " +
-                    "Please enter valid Car Brand");
-            else break;
+        System.out.print("Enter Car Brand: ");
+        carBrand = in.nextLine().trim();
+        if(carBrand.equals("")) {
+            System.out.println("\nYou have not entered any input! " +
+                               "Please enter valid Car Brand");
+            return null;
         }
-        return carBrand;
+        else {
+            return carBrand;
+        }
     }
 
     @Override
-    public String validateAndGetCarNumber() {
+    public String getCarNumber() {
         String carNo;
-        while (true) {
-            System.out.print("\nEnter Car Number(should be less than or equal to 5 characters): ");
-            carNo = in.nextLine().trim();
-            if(carNo.equals("")) System.out.println("\nYou have not entered any input! Please enter valid Car Number");
-            else if(carNo.length() > 5) System.out.println("""
-
-                    You have entered more than 5 characters as Car Number.
-                    Please Enter valid Car Number(should be less than or equal to 5 characters):\s""");
-            else break;
+        System.out.print("\nEnter Car Number(should be less than or equal to 5 characters): ");
+        carNo = in.nextLine().trim();
+        if(carNo.equals("")) {
+            System.out.println("\nYou have not entered any input! Please enter valid Car Number");
         }
-        return carNo;
+        else if(carNo.length() > 5) {
+            System.out.println("\n" + "You have entered more than 5 characters as Car Number.");
+            System.out.println("Please Enter valid Car Number(should be less than or equal to 5 characters): ");
+        }
+        else {
+            return carNo;
+        }
+        return null;
     }
 
     @Override
     public String getCarConfirmation() {
+        System.out.println("If you want to update car details choose the above option (1 or 2 or 3) ");
+        System.out.print("Enter your choice: ");
         return in.nextLine().trim();
     }
 
