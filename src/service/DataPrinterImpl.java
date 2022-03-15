@@ -15,7 +15,6 @@ public class DataPrinterImpl implements DataPrinter {
         System.out.println("3. Car Model Number: " + carModel);
         System.out.println("4. Continue Parking");
         System.out.println("5. Cancel Parking");
-        System.out.print("If you want to update car details choose the above option (1 or 2 or 3): ");
     }
 
     @Override
