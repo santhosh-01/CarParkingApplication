@@ -10,7 +10,6 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
 
     private final Scanner in;
     private final CarParking carParking;
-    private final CarParkingMessage carParkingMessage;
 
     private final MultiFloorCarParking obj;
     private final ArrayList<ParkingLot> arr;
@@ -20,7 +19,6 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
         this.obj = obj;
         arr = this.obj.getParkingLots();
         this.carParking = carParking;
-        carParkingMessage = new CarParkingMessage();
     }
 
     @Override
@@ -30,16 +28,20 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
 
         carParking.generatePathToParkACar(parkingLot,pos);
 
-        carParkingMessage.showParkingPlace(parkingLot,pos);
+        System.out.println("\nCar Parking Place : " + (pos[0] + 1) + "/" + (pos[1] + 1) + " at " +
+                OrdinalNumber.getOrdinalNo(parkingLot.getFloorNo()) + " floor");
 
-        carParkingMessage.showParkingSuccess(parkingLot,car);
+        System.out.println("\nCar Number " + car.getCarNumber() + " parked successfully in " +
+                OrdinalNumber.getOrdinalNo(parkingLot.getFloorNo()) + " floor ");
+
         hashLine();
     }
 
     @Override
     public void generateBill(ParkingLot parkingLot, int[] pos, Car car) {
         hashLine();
-        carParkingMessage.showParkingPlace(parkingLot,pos);
+        System.out.println("\nCar Parking Place : " + (pos[0] + 1) + "/" + (pos[1] + 1) + " at " +
+                OrdinalNumber.getOrdinalNo(parkingLot.getFloorNo()) + " floor");
 
         ParkingCell parkingCell = carParking.exitACarFromPosition(parkingLot,pos,car);
 
@@ -48,7 +50,8 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
 
         carParking.generatePathToExitACar(parkingLot,pos);
 
-        carParkingMessage.showCarExitSuccess(parkingLot,car);
+        System.out.println("\nCar Number " + car.getCarNumber() + " removed successfully from " +
+                OrdinalNumber.getOrdinalNo(parkingLot.getFloorNo()) + " floor ");
 
         hashLine();
     }
