@@ -1,7 +1,8 @@
 package service;
 
-import model.Billing;
+import model.BillingSystem;
 import model.Car;
+import model.CarParkingPlace;
 import model.ParkingLot;
 import util.OrdinalNumber;
 
@@ -14,8 +15,8 @@ public class DataProviderImpl implements DataProvider{
     @Override
     public boolean billingAmountAcceptance() {
         while (true) {
-            System.out.println("\nBilling Amount for parking a car: " + Billing.billingAmountPerHour
-                    + " " + Billing.moneyAbbr + " per hour");
+            System.out.println("\nBilling Amount for parking a car: " + BillingSystem.billingAmountPerHour
+                    + " " + BillingSystem.moneyAbbr + " per hour");
             System.out.print("Are you going to park a car? (Yes / No): ");
             String choice = in.nextLine().trim();
             if(choice.equalsIgnoreCase("yes")) return true;
@@ -93,19 +94,18 @@ public class DataProviderImpl implements DataProvider{
     }
 
     @Override
-    public String getSuggestedParkingPlaceConfirmation(int[] position) {
-        System.out.println("\nEmpty Parking Place is available at " +
-                (position[0] + 1) + "/" + (position[1] + 1));
+    public String getSuggestedParkingPlaceConfirmation(int position) {
+        System.out.println("\nEmpty Parking Place is available at " + position);
         System.out.print("Do you agree to proceed further with above parking location? (Yes / No) ");
         return in.nextLine().trim();
     }
 
     @Override
-    public String getCarParkingPlace(ParkingLot parkingLot) {
+    public int getCarParkingPlace(ParkingLot parkingLot) {
         System.out.println("\nDetailed Floor Map of " + OrdinalNumber.getOrdinalNo(parkingLot.getFloorNo()) + " Floor");
         parkingLot.showModifiedParkingLot(true);
-        System.out.print("Select any one Empty Parking Place in (R/C) format: ");
-        return in.nextLine().trim();
+        System.out.print("Select any one Empty Parking Place : ");
+        return Integer.parseInt(in.nextLine().trim());
     }
 
     @Override
