@@ -1,13 +1,14 @@
 package service;
 
 import model.Car;
+import model.CarParkingPlace;
 import model.ParkingLot;
 
 public interface CarParkingFunctionalities {
 
-    void generateReceipt(ParkingLot parkingLot, int[] pos, Car car);
+    void generateReceipt(ParkingLot parkingLot, CarParkingPlace pos, Car car);
 
-    void generateBill(ParkingLot parkingLot, int[] pos, Car car);
+    void generateBill(ParkingLot parkingLot, CarParkingPlace pos, Car car);
 
     void showAllParkingSlots();
 
