@@ -1,5 +1,8 @@
 package service;
 
+import database.CarEntryExitTable;
+import database.CarInParking;
+import database.CarTable;
 import model.*;
 import util.Validator;
 
@@ -17,12 +20,17 @@ public class CarParkingMenu {
 
     public CarParkingMenu(PropertiesClass prop) {
         in = new Scanner(System.in);
+
+        CarTable carTable = new CarTable();
+        CarInParking carInParking = new CarInParking();
+        CarEntryExitTable carEntryExitTable = new CarEntryExitTable();
+
         message = new CarParkingMessage();
         DataProvider dataProvider = new DataProviderImpl();
         dataPrinter = new DataPrinterImpl();
         multiFloorCarParking = new MultiFloorCarParking(prop);
 
-        carParking = new CarParkingImpl(multiFloorCarParking, dataProvider,dataPrinter);
+        carParking = new CarParkingImpl(multiFloorCarParking, dataProvider,dataPrinter, carTable, carInParking, carEntryExitTable);
         appFunctionalities = new CarParkingFunctionalitiesImpl(multiFloorCarParking,carParking);
     }
 
@@ -41,10 +49,15 @@ public class CarParkingMenu {
                 if(car == null) continue;
                 if(carParking.checkDuplicateCarNoInParking(car.getCarNumber())) continue;
                 if(!carParking.confirmCarDetails(car)) continue;
-                if(carParking.checkAndSuggestLastCarParkingPlace(car)) continue;
+                CarLocation carLocation = carParking.checkAndSuggestLastCarParkingPlace(car);
+                if(carLocation != null) {
+                    ParkingLot parkingLot = multiFloorCarParking.getParkingLots().get(carLocation.getFloorNo());
+                    appFunctionalities.generateReceipt(parkingLot,carLocation.getCarParkingPlace(),car);
+                }
                 ParkingLot parkingLot = carParking.suggestAndGetCarParkingLot();
-                int[] pos = carParking.suggestAndGetParkingPlace(parkingLot);
-                appFunctionalities.generateReceipt(parkingLot,pos,car);
+                CarParkingPlace pos = carParking.suggestAndGetParkingPlace(parkingLot);
+                carLocation = new CarLocation(pos,parkingLot.getFloorNo());
+                appFunctionalities.generateReceipt(parkingLot,carLocation.getCarParkingPlace(),car);
             }
             else if(choice == 2) {
                 Car car = carParking.acceptCarDetailsToExit();
@@ -52,7 +65,7 @@ public class CarParkingMenu {
                 String carNo = car.getCarNumber();
                 if(!carParking.confirmCarDetailsForExit(car)) continue;
                 ParkingLot parkingLot = multiFloorCarParking.getParkingLotWithCarNumber(carNo);
-                int[] pos = parkingLot.getCarNumberPosition(carNo);
+                CarParkingPlace pos = parkingLot.getCarNumberPosition(carNo);
                 appFunctionalities.generateBill(parkingLot,pos,car);
             }
             else if(choice == 3) {
