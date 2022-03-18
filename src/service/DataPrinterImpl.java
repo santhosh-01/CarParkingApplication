@@ -2,6 +2,7 @@ package service;
 
 import model.*;
 import util.OrdinalNumber;
+import util.TimeFormat;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -23,18 +24,20 @@ public class DataPrinterImpl implements DataPrinter {
     }
 
     @Override
-    public void LastCarParkingDetails(int[] pos, CarEntryExit carEntryExit) {
+    public void LastCarParkingDetails(CarLocation pos, CarEntryExit carEntryExit) {
         System.out.println("\nThis car was parked previously in the following parking place!");
-        System.out.println("Last Car Parking Place: " + pos[0] + "/" + pos[1] + " at "
-                + getOrdinalNumber(pos[2]) + " floor");
-        System.out.println("Last Car Entry Time: " + getTime(carEntryExit.getEntryTime()));
-        System.out.println("Last Car Exit Time: " + getTime(carEntryExit.getExitTime()));
+        System.out.println("Last Car Parking Place: " + pos.getCarParkingPlace().getRow() + "/"
+                + pos.getCarParkingPlace().getCol() + " at "
+                + OrdinalNumber.getOrdinalNo(pos.getFloorNo()) + " floor");
+        System.out.println("Last Car Entry Time: " + TimeFormat.getTime(carEntryExit.getEntryTime()));
+        System.out.println("Last Car Exit Time: " + TimeFormat.getTime(carEntryExit.getExitTime()));
     }
 
     @Override
-    public void emptyCarParkingPlace(int[] position) {
-        System.out.println("\nEmpty Car Parking is available in " + (position[0]+1) + "/" + (position[1]+1) +
-                " on " + getOrdinalNumber(position[2]) + " floor");
+    public void emptyCarParkingPlace(CarLocation position) {
+        System.out.println("\nEmpty Car Parking is available in " + (position.getCarParkingPlace().getRow()+1)
+                + "/" + (position.getCarParkingPlace().getCol()+1) + " on "
+                + OrdinalNumber.getOrdinalNo(position.getFloorNo()) + " floor");
     }
 
     @Override
@@ -49,7 +52,7 @@ public class DataPrinterImpl implements DataPrinter {
 
     @Override
     public void parkingIsFullInFloor(int floor) {
-        System.out.println("\nSorry! Now, Parking is Full in " + getOrdinalNumber(floor) + " floor!");
+        System.out.println("\nSorry! Now, Parking is Full in " + OrdinalNumber.getOrdinalNo(floor) + " floor!");
     }
 
     @Override
@@ -73,22 +76,6 @@ public class DataPrinterImpl implements DataPrinter {
     }
 
     @Override
-    public void generateReceipt(CarParking carParking, MultiFloorCarParking obj,
-                                ParkingLot parkingLot, int[] pos, Car car) {
-        hashLine();
-        carParking.parkACar(parkingLot,pos,car);
-
-        carParking.generatePathToParkACar(parkingLot,pos);
-
-        System.out.println("\nCar Parking Place : " + (pos[0] + 1) + "/" + (pos[1] + 1) + " at " +
-                getOrdinalNumber(parkingLot.getFloorNo()) + " floor");
-
-        System.out.println("\nCar Number " + car.getCarNumber() + " parked successfully in " +
-                getOrdinalNumber(parkingLot.getFloorNo()) + " floor ");
-        hashLine();
-    }
-
-    @Override
     public void noCarsAvailable() {
         System.out.println("\nSorry! No Cars are available to exit!");
     }
@@ -109,16 +96,17 @@ public class DataPrinterImpl implements DataPrinter {
     }
 
     @Override
-    public void carParkingHistory(LocalTime time1, LocalTime time2, int[] pos, CarEntryExit carEntryExit) {
+    public void carParkingHistory(LocalTime time1, LocalTime time2, CarLocation pos, CarEntryExit carEntryExit) {
         if(time1 == null) System.out.print("00:00:00");
-        else System.out.print(getTime(time1));
+        else System.out.print(TimeFormat.getTime(time1));
         System.out.print(" - ");
         if(time2 == null ) System.out.print("00:00:00");
-        else System.out.print(getTime(time2));
+        else System.out.print(TimeFormat.getTime(time2));
         System.out.print(" - ");
-        System.out.print(pos[0] + "/" + pos[1] + " in " + getOrdinalNumber(pos[2]) + " floor - ");
-        Billing billing = carEntryExit.getBilling();
-        System.out.printf("%.2f" + " " + Billing.moneyAbbr, billing.getBill());
+        System.out.print(pos.getCarParkingPlace().getRow() + "/" + pos.getCarParkingPlace().getCol()
+                + " in " + OrdinalNumber.getOrdinalNo(pos.getFloorNo()) + " floor - ");
+        BillingSystem billing = carEntryExit.getBilling();
+        System.out.printf("%.2f" + " " + BillingSystem.moneyAbbr, billing.getBill());
         System.out.println();
     }
 
@@ -141,21 +129,6 @@ public class DataPrinterImpl implements DataPrinter {
     @Override
     public void givenCarNumberEmpty() {
         System.out.println("\nGiven Car Number is Empty!");
-    }
-
-
-    private String getTime(LocalTime time) {
-        return time.getHour() + ":" + time.getMinute() + ":" + time.getSecond();
-    }
-
-    private String getOrdinalNumber(int floorNo) {
-        if(floorNo == 0) return "Ground";
-        else return OrdinalNumber.getOrdinalNo(floorNo);
-    }
-
-    private void hashLine() {
-        System.out.println();
-        System.out.println("#".repeat(170));
     }
 
 }
