@@ -92,7 +92,7 @@ public class DataPrinterImpl implements DataPrinter {
 
     @Override
     public void askingBackToMainMenu() {
-        System.out.println("If you want to move back to main menu, Enter 'back'");
+        System.out.println("If you want to move back to main menu, Enter 'b'");
     }
 
     @Override
