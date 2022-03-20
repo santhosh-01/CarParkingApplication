@@ -2,7 +2,6 @@ package service;
 
 import model.BillingSystem;
 import model.Car;
-import model.CarParkingPlace;
 import model.ParkingLot;
 import util.OrdinalNumber;
 
@@ -110,7 +109,7 @@ public class DataProviderImpl implements DataProvider{
 
     @Override
     public String getCarNumberToExit() {
-        System.out.print("\nEnter the Car Number to exit ['back' for Main menu]: ");
+        System.out.print("\nEnter the Car Number to exit ['b' for Main menu]: ");
         return in.nextLine().trim();
     }
 
@@ -125,13 +124,13 @@ public class DataProviderImpl implements DataProvider{
 
     @Override
     public String getBackChoice() {
-        System.out.println("If you want to move back to main menu, Enter 'back'");
+        System.out.println("If you want to move back to main menu, Enter 'b'");
         return in.nextLine().trim();
     }
 
     @Override
     public String getCarNumberForHistory() {
-        System.out.print("\nEnter Car Number to fetch history ['back' for Main menu]: ");
+        System.out.print("\nEnter Car Number to fetch history ['b' for Main menu]: ");
         return in.nextLine();
     }
 
