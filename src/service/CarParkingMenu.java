@@ -13,6 +13,8 @@ public class CarParkingMenu {
     private final Scanner in;
     private final CarParkingMessage message;
 
+    private final CarInParking carInParking;
+
     private final MultiFloorCarParking multiFloorCarParking;
     private final CarParkingFunctionalities appFunctionalities;
     private final DataPrinter dataPrinter;
@@ -22,7 +24,7 @@ public class CarParkingMenu {
         in = new Scanner(System.in);
 
         CarTable carTable = new CarTable();
-        CarInParking carInParking = new CarInParking();
+        carInParking = new CarInParking();
         CarEntryExitTable carEntryExitTable = new CarEntryExitTable();
 
         message = new CarParkingMessage();
@@ -53,6 +55,7 @@ public class CarParkingMenu {
                 if(carLocation != null) {
                     ParkingLot parkingLot = multiFloorCarParking.getParkingLots().get(carLocation.getFloorNo());
                     appFunctionalities.generateReceipt(parkingLot,carLocation.getCarParkingPlace(),car);
+                    continue;
                 }
                 ParkingLot parkingLot = carParking.suggestAndGetCarParkingLot();
                 CarParkingPlace pos = carParking.suggestAndGetParkingPlace(parkingLot);
@@ -66,7 +69,7 @@ public class CarParkingMenu {
                 if(!carParking.confirmCarDetailsForExit(car)) continue;
                 ParkingLot parkingLot = multiFloorCarParking.getParkingLotWithCarNumber(carNo);
                 CarParkingPlace pos = parkingLot.getCarNumberPosition(carNo);
-                appFunctionalities.generateBill(parkingLot,pos,car);
+                appFunctionalities.generateBill(new CarExit(),carInParking,parkingLot,pos,car);
             }
             else if(choice == 3) {
                 appFunctionalities.showAllParkingSlots();
