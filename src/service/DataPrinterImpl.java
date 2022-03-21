@@ -65,7 +65,7 @@ public class DataPrinterImpl implements DataPrinter {
 
     @Override
     public void askCorrectFormatOfParkingPlace() {
-        System.out.println("\nPlease Enter correct format (R/C)");
+        System.out.println("\nPlease Enter correct format ");
     }
 
     @Override
