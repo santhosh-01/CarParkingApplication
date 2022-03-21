@@ -100,11 +100,11 @@ public class DataProviderImpl implements DataProvider{
     }
 
     @Override
-    public int getCarParkingPlace(ParkingLot parkingLot) {
+    public String getCarParkingPlace(ParkingLot parkingLot) {
         System.out.println("\nDetailed Floor Map of " + OrdinalNumber.getOrdinalNo(parkingLot.getFloorNo()) + " Floor");
         parkingLot.showModifiedParkingLot(true);
         System.out.print("Select any one Empty Parking Place : ");
-        return Integer.parseInt(in.nextLine().trim());
+        return in.nextLine().trim();
     }
 
     @Override
