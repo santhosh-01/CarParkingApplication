@@ -45,6 +45,8 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
         parkingCell = carParking.exitACarFromPosition(parkingLot,pos,car);
 
         System.out.println();
+        System.out.println("Billing : ");
+        System.out.println("---------");
         System.out.println(carParking.generateBill(parkingCell,car).toString());
 
         carParking.generatePathToExitACar(parkingLot,pos);

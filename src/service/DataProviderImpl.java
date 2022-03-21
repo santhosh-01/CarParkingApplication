@@ -75,7 +75,7 @@ public class DataProviderImpl implements DataProvider{
 
     @Override
     public String getCarConfirmation() {
-        System.out.println("If you want to update car details choose the above option (1 or 2 or 3) ");
+        System.out.println("\nIf you want to update car details choose the above option (1 or 2 or 3) ");
         System.out.print("Enter your choice: ");
         return in.nextLine().trim();
     }
