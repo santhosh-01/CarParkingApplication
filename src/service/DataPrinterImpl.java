@@ -103,8 +103,7 @@ public class DataPrinterImpl implements DataPrinter {
         if(time2 == null ) System.out.print("00:00:00");
         else System.out.print(TimeFormat.getTime(time2));
         System.out.print(" - ");
-        System.out.print(pos.getCarParkingPlace().getRow() + "/" + pos.getCarParkingPlace().getCol()
-                + " in " + OrdinalNumber.getOrdinalNo(pos.getFloorNo()) + " floor - ");
+        System.out.print( pos.getCarParkingPlace().getCarParkingSpotNumber() + " in " + OrdinalNumber.getOrdinalNo(pos.getFloorNo()) + " floor - ");
         BillingSystem billing = carEntryExit.getBilling();
         System.out.printf("%.2f" + " " + BillingSystem.moneyAbbr, billing.getBill());
         System.out.println();

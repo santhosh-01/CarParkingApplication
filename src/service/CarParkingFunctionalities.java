@@ -3,13 +3,15 @@ package service;
 import database.CarInParking;
 import model.Car;
 import model.CarParkingPlace;
+import model.ParkingCell;
 import model.ParkingLot;
 
 public interface CarParkingFunctionalities {
 
-    void generateReceipt(ParkingLot parkingLot, CarParkingPlace pos, Car car);
+    void generateReceipt(ParkingLot parkingLot, CarParkingPlace pos, Car car, ParkingCell parkingCell);
 
-    void generateBill(CarExit carExit, CarInParking carInParking, ParkingLot parkingLot, CarParkingPlace pos, Car car);
+    void generateBill(CarInParking carInParking, ParkingLot parkingLot, CarParkingPlace pos, Car car,
+                      ParkingCell parkingCell);
 
     void showAllParkingSlots();
 

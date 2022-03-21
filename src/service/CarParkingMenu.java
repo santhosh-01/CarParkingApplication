@@ -20,7 +20,7 @@ public class CarParkingMenu {
     private final DataPrinter dataPrinter;
     private final CarParking carParking;
 
-    public CarParkingMenu(PropertiesClass prop) {
+    public CarParkingMenu(PropertiesDataClass prop) {
         in = new Scanner(System.in);
 
         CarTable carTable = new CarTable();
@@ -54,13 +54,16 @@ public class CarParkingMenu {
                 CarLocation carLocation = carParking.checkAndSuggestLastCarParkingPlace(car);
                 if(carLocation != null) {
                     ParkingLot parkingLot = multiFloorCarParking.getParkingLots().get(carLocation.getFloorNo());
-                    appFunctionalities.generateReceipt(parkingLot,carLocation.getCarParkingPlace(),car);
+                    CarParkingPlace pos = carLocation.getCarParkingPlace();
+                    ParkingCell parkingCell = parkingLot.getParkingCellByPosition(pos.getRow(),pos.getCol());
+                    appFunctionalities.generateReceipt(parkingLot,carLocation.getCarParkingPlace(),car,parkingCell);
                     continue;
                 }
                 ParkingLot parkingLot = carParking.suggestAndGetCarParkingLot();
                 CarParkingPlace pos = carParking.suggestAndGetParkingPlace(parkingLot);
+                ParkingCell parkingCell = parkingLot.getParkingCellByPosition(pos.getRow(),pos.getCol());
                 carLocation = new CarLocation(pos,parkingLot.getFloorNo());
-                appFunctionalities.generateReceipt(parkingLot,carLocation.getCarParkingPlace(),car);
+                appFunctionalities.generateReceipt(parkingLot,carLocation.getCarParkingPlace(),car,parkingCell);
             }
             else if(choice == 2) {
                 Car car = carParking.acceptCarDetailsToExit();
@@ -69,7 +72,8 @@ public class CarParkingMenu {
                 if(!carParking.confirmCarDetailsForExit(car)) continue;
                 ParkingLot parkingLot = multiFloorCarParking.getParkingLotWithCarNumber(carNo);
                 CarParkingPlace pos = parkingLot.getCarNumberPosition(carNo);
-                appFunctionalities.generateBill(new CarExit(),carInParking,parkingLot,pos,car);
+                ParkingCell parkingCell = parkingLot.getParkingCellByPosition(pos.getRow(),pos.getCol());
+                appFunctionalities.generateBill(carInParking,parkingLot,pos,car,parkingCell);
             }
             else if(choice == 3) {
                 appFunctionalities.showAllParkingSlots();

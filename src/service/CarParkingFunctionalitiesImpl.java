@@ -5,7 +5,6 @@ import model.*;
 import util.OrdinalNumber;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities {
 
@@ -21,14 +20,13 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
     }
 
     @Override
-    public void generateReceipt(ParkingLot parkingLot, CarParkingPlace pos, Car car) {
+    public void generateReceipt(ParkingLot parkingLot, CarParkingPlace pos, Car car, ParkingCell parkingCell) {
         hashLine();
         carParking.parkACar(parkingLot,pos,car);
 
         carParking.generatePathToParkACar(parkingLot,pos);
 
-        System.out.println("\nCar Parking Place : " + (pos.getRow() + 1) + "/" +
-                (pos.getCol() + 1) + " at " +
+        System.out.println("\nCar Parking Place : " + parkingCell.getPosition() + " at " +
                 OrdinalNumber.getOrdinalNo(parkingLot.getFloorNo()) + " floor");
 
         System.out.println("\nCar Number " + car.getCarNumber() + " parked successfully in " +
@@ -38,12 +36,13 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
     }
 
     @Override
-    public void generateBill(CarExit carExit, CarInParking carInParking, ParkingLot parkingLot, CarParkingPlace pos, Car car) {
+    public void generateBill(CarInParking carInParking, ParkingLot parkingLot, CarParkingPlace pos, Car car,
+                             ParkingCell parkingCell) {
         hashLine();
-        System.out.println("\nCar Parking Place : " + (pos.getRow() + 1) + "/" + (pos.getCol() + 1) + " at " +
+        System.out.println("\nCar Parking Place : " + parkingCell.getPosition()  + " at " +
                 OrdinalNumber.getOrdinalNo(parkingLot.getFloorNo()) + " floor");
 
-        ParkingCell parkingCell = carExit.exitACarFromPosition(carInParking,parkingLot,pos,car);
+        parkingCell = carParking.exitACarFromPosition(parkingLot,pos,car);
 
         System.out.println();
         System.out.println(carParking.generateBill(parkingCell,car).toString());
