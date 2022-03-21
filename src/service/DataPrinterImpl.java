@@ -26,8 +26,7 @@ public class DataPrinterImpl implements DataPrinter {
     @Override
     public void LastCarParkingDetails(CarLocation pos, CarEntryExit carEntryExit) {
         System.out.println("\nThis car was parked previously in the following parking place!");
-        System.out.println("Last Car Parking Place: " + pos.getCarParkingPlace().getRow() + "/"
-                + pos.getCarParkingPlace().getCol() + " at "
+        System.out.println("Last Car Parking Place: " + pos.getCarParkingPlace().getCarParkingSpotNumber() + " at "
                 + OrdinalNumber.getOrdinalNo(pos.getFloorNo()) + " floor");
         System.out.println("Last Car Entry Time: " + TimeFormat.getTime(carEntryExit.getEntryTime()));
         System.out.println("Last Car Exit Time: " + TimeFormat.getTime(carEntryExit.getExitTime()));
@@ -35,9 +34,8 @@ public class DataPrinterImpl implements DataPrinter {
 
     @Override
     public void emptyCarParkingPlace(CarLocation position) {
-        System.out.println("\nEmpty Car Parking is available in " + (position.getCarParkingPlace().getRow()+1)
-                + "/" + (position.getCarParkingPlace().getCol()+1) + " on "
-                + OrdinalNumber.getOrdinalNo(position.getFloorNo()) + " floor");
+        System.out.println("\nEmpty Car Parking is available in " + position.getCarParkingPlace().getCarParkingSpotNumber()
+                + " on " + OrdinalNumber.getOrdinalNo(position.getFloorNo()) + " floor");
     }
 
     @Override
