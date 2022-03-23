@@ -1,5 +1,6 @@
 package service;
 
+import database.CarEntryExitTable;
 import database.CarInParking;
 import model.*;
 import util.OrdinalNumber;
@@ -37,19 +38,20 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
 
     @Override
     public void generateBill(CarInParking carInParking, ParkingLot parkingLot, CarParkingPlace pos, Car car,
-                             ParkingCell parkingCell) {
+                             ParkingCell parkingCell, BillingFunctionalities billingFunctionalities) {
         hashLine();
         System.out.println("\nCar Parking Place : " + parkingCell.getPosition()  + " at " +
                 OrdinalNumber.getOrdinalNo(parkingLot.getFloorNo()) + " floor");
 
-        parkingCell = carParking.exitACarFromPosition(parkingLot,pos,car);
+        CarExit carExit = new CarExit();
+        parkingCell = carExit.exitACarFromPosition(carInParking,parkingLot,pos,car);
 
         System.out.println();
         System.out.println("Billing : ");
         System.out.println("---------");
-        System.out.println(carParking.generateBill(parkingCell,car).toString());
+        System.out.println(billingFunctionalities.generateBill(parkingCell,car).toString());
 
-        carParking.generatePathToExitACar(parkingLot,pos);
+        carExit.generatePathToExitACar(obj,parkingLot,pos);
 
         System.out.println("\nCar Number " + car.getCarNumber() + " removed successfully from " +
                 OrdinalNumber.getOrdinalNo(parkingLot.getFloorNo()) + " floor ");
@@ -78,24 +80,25 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
     }
 
     @Override
-    public void getCarInfoAndParkingHistory(Car car, DataPrinter dataPrinter) {
+    public void getCarInfoAndParkingHistory(Car car, DataPrinter dataPrinter, ParkingHistory parkingHistory) {
         hashLine();
         dataPrinter.showCarInformation(car);
         System.out.println("\nParking History:");
-        if(!carParking.showCarParkingHistory(car)) {
+        if(!parkingHistory.showCarParkingHistory(car)) {
             System.out.println("No Parking History Available");
         }
         hashLine();
     }
 
     @Override
-    public void getBillingHistoryByCarNumber(String carNo) {
+    public void getBillingHistoryByCarNumber(BillingFunctionalities billingFunctionalities, String carNo) {
         hashLine();
         System.out.println("\nBilling History:");
         System.out.println();
-        ArrayList<BillingSystem> billings = carParking.getBillingsByCarNo(carNo);
+        ArrayList<BillingSystem> billings = billingFunctionalities.getBillingsByCarNo(carNo);
         for (BillingSystem billing:billings) {
             System.out.println(billing.toString());
+            System.out.println();
         }
         hashLine();
     }

@@ -17,6 +17,9 @@ public class CarParkingMenu {
 
     private final MultiFloorCarParking multiFloorCarParking;
     private final CarParkingFunctionalities appFunctionalities;
+    private final BillingFunctionalities billingFunctionalities;
+    private final ParkingHistory parkingHistory;
+    private final DataHandler dataHandler;
     private final DataPrinter dataPrinter;
     private final CarParking carParking;
 
@@ -31,8 +34,11 @@ public class CarParkingMenu {
         DataProvider dataProvider = new DataProviderImpl();
         dataPrinter = new DataPrinterImpl();
         multiFloorCarParking = new MultiFloorCarParking(prop);
+        billingFunctionalities = new BillingFunctionalities(carEntryExitTable);
+        parkingHistory = new ParkingHistory(carTable,dataProvider,dataPrinter,carEntryExitTable);
 
-        carParking = new CarParkingImpl(multiFloorCarParking, dataProvider,dataPrinter, carTable, carInParking, carEntryExitTable);
+        dataHandler = new DataHandler(multiFloorCarParking,dataProvider,dataPrinter,carTable,carInParking,carEntryExitTable);
+        carParking = new CarParking(multiFloorCarParking, dataProvider,dataPrinter, carTable, carInParking, carEntryExitTable);
         appFunctionalities = new CarParkingFunctionalitiesImpl(multiFloorCarParking,carParking);
     }
 
@@ -47,10 +53,10 @@ public class CarParkingMenu {
                     System.out.println("\nSorry! Parking Full!");
                     continue;
                 }
-                Car car = carParking.acceptCarDetailsToPark();
+                Car car = dataHandler.acceptCarDetailsToPark();
                 if(car == null) continue;
                 if(carParking.checkDuplicateCarNoInParking(car.getCarNumber())) continue;
-                if(!carParking.confirmCarDetails(car)) continue;
+                if(!dataHandler.confirmCarDetails(car)) continue;
                 CarLocation carLocation = carParking.checkAndSuggestLastCarParkingPlace(car);
                 if(carLocation != null) {
                     ParkingLot parkingLot = multiFloorCarParking.getParkingLots().get(carLocation.getFloorNo());
@@ -66,14 +72,14 @@ public class CarParkingMenu {
                 appFunctionalities.generateReceipt(parkingLot,carLocation.getCarParkingPlace(),car,parkingCell);
             }
             else if(choice == 2) {
-                Car car = carParking.acceptCarDetailsToExit();
+                Car car = dataHandler.acceptCarDetailsToExit();
                 if(car == null) continue;
                 String carNo = car.getCarNumber();
-                if(!carParking.confirmCarDetailsForExit(car)) continue;
+                if(!dataHandler.confirmCarDetailsForExit(car)) continue;
                 ParkingLot parkingLot = multiFloorCarParking.getParkingLotWithCarNumber(carNo);
                 CarParkingPlace pos = parkingLot.getCarNumberPosition(carNo);
                 ParkingCell parkingCell = parkingLot.getParkingCellByPosition(pos.getRow(),pos.getCol());
-                appFunctionalities.generateBill(carInParking,parkingLot,pos,car,parkingCell);
+                appFunctionalities.generateBill(carInParking,parkingLot,pos,car,parkingCell,billingFunctionalities);
             }
             else if(choice == 3) {
                 appFunctionalities.showAllParkingSlots();
@@ -82,14 +88,14 @@ public class CarParkingMenu {
                 appFunctionalities.showAllDetailedParkingSlots();
             }
             else if(choice == 5) {
-                Car car = carParking.getValidCarInParkingHistory();
+                Car car = parkingHistory.getValidCarInParkingHistory();
                 if(car == null) continue;
-                appFunctionalities.getCarInfoAndParkingHistory(car,dataPrinter);
+                appFunctionalities.getCarInfoAndParkingHistory(car,dataPrinter,parkingHistory);
             }
             else if(choice == 6) {
-                String carNo = carParking.getValidCarNumberInParkingHistory();
+                String carNo = parkingHistory.getValidCarNumberInParkingHistory();
                 if(carNo == null) continue;
-                appFunctionalities.getBillingHistoryByCarNumber(carNo);
+                appFunctionalities.getBillingHistoryByCarNumber(billingFunctionalities, carNo);
             }
             else if(choice == 7){
                 break;

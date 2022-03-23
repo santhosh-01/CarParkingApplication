@@ -1,5 +1,6 @@
 package service;
 
+import database.CarEntryExitTable;
 import database.CarInParking;
 import model.Car;
 import model.CarParkingPlace;
@@ -11,14 +12,14 @@ public interface CarParkingFunctionalities {
     void generateReceipt(ParkingLot parkingLot, CarParkingPlace pos, Car car, ParkingCell parkingCell);
 
     void generateBill(CarInParking carInParking, ParkingLot parkingLot, CarParkingPlace pos, Car car,
-                      ParkingCell parkingCell);
+                      ParkingCell parkingCell, BillingFunctionalities billingFunctionalities);
 
     void showAllParkingSlots();
 
     void showAllDetailedParkingSlots();
 
-    void getCarInfoAndParkingHistory(Car car, DataPrinter dataPrinter);
+    void getCarInfoAndParkingHistory(Car car, DataPrinter dataPrinter, ParkingHistory parkingHistory);
 
-    void getBillingHistoryByCarNumber(String carNo);
+    void getBillingHistoryByCarNumber(BillingFunctionalities billingFunctionalities, String carNo);
 
 }
