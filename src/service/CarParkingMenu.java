@@ -79,7 +79,7 @@ public class CarParkingMenu {
                 ParkingLot parkingLot = multiFloorCarParking.getParkingLotWithCarNumber(carNo);
                 CarParkingPlace pos = parkingLot.getCarNumberPosition(carNo);
                 ParkingCell parkingCell = parkingLot.getParkingCellByPosition(pos.getRow(),pos.getCol());
-                appFunctionalities.generateBill(carInParking,parkingLot,pos,car,parkingCell,billingFunctionalities);
+                appFunctionalities.generateBill(carInParking,parkingLot,pos,car,parkingCell,billingFunctionalities,parkingHistory);
             }
             else if(choice == 3) {
                 appFunctionalities.showAllParkingSlots();

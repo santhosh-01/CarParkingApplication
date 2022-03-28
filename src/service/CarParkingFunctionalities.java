@@ -12,7 +12,7 @@ public interface CarParkingFunctionalities {
     void generateReceipt(ParkingLot parkingLot, CarParkingPlace pos, Car car, ParkingCell parkingCell);
 
     void generateBill(CarInParking carInParking, ParkingLot parkingLot, CarParkingPlace pos, Car car,
-                      ParkingCell parkingCell, BillingFunctionalities billingFunctionalities);
+                      ParkingCell parkingCell, BillingFunctionalities billingFunctionalities,ParkingHistory parkingHistory);
 
     void showAllParkingSlots();
 

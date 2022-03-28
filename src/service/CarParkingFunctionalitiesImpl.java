@@ -38,7 +38,7 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
 
     @Override
     public void generateBill(CarInParking carInParking, ParkingLot parkingLot, CarParkingPlace pos, Car car,
-                             ParkingCell parkingCell, BillingFunctionalities billingFunctionalities) {
+                             ParkingCell parkingCell, BillingFunctionalities billingFunctionalities,ParkingHistory parkingHistory) {
         hashLine();
         System.out.println("\nCar Parking Place : " + parkingCell.getPosition()  + " at " +
                 OrdinalNumber.getOrdinalNo(parkingLot.getFloorNo()) + " floor");
@@ -46,10 +46,12 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
         CarExit carExit = new CarExit();
         parkingCell = carExit.exitACarFromPosition(carInParking,parkingLot,pos,car);
 
+        CarEntryExit carEntryExit = parkingHistory.getLastCarEntryExitByCar(parkingCell,car);
+
         System.out.println();
         System.out.println("Billing : ");
         System.out.println("---------");
-        System.out.println(billingFunctionalities.generateBill(parkingCell,car).toString());
+        System.out.println(billingFunctionalities.generateBill(carEntryExit,parkingCell,car).toString());
 
         carExit.generatePathToExitACar(obj,parkingLot,pos);
 
