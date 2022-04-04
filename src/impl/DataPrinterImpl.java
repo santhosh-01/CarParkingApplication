@@ -1,8 +1,6 @@
-package service;
+package impl;
 
-import model.*;
-import util.OrdinalNumber;
-import util.TimeFormat;
+import core.*;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -10,12 +8,8 @@ import java.util.ArrayList;
 public class DataPrinterImpl implements DataPrinter {
 
     @Override
-    public void showCarDetails(String carNo, String carBrand, String carModel) {
-        System.out.println("\n1. Car Number: " + carNo);
-        System.out.println("2. Car Brand: " + carBrand);
-        System.out.println("3. Car Model Number: " + carModel);
-        System.out.println("4. Continue Parking");
-        System.out.println("5. Cancel Parking");
+    public void carDetailsConfirmation(String carInfoUpdateMenu) {
+        System.out.println(carInfoUpdateMenu);
     }
 
     @Override
@@ -24,18 +18,18 @@ public class DataPrinterImpl implements DataPrinter {
     }
 
     @Override
-    public void LastCarParkingDetails(CarLocation pos, CarEntryExit carEntryExit) {
+    public void LastCarParkingDetails(int carParkingSpotNumber, int floorNo, CarEntryExit carEntryExit) {
         System.out.println("\nThis car was parked previously in the following parking place!");
-        System.out.println("Last Car Parking Place: " + pos.getCarParkingPlace().getCarParkingSpotNumber() + " at "
-                + OrdinalNumber.getOrdinalNo(pos.getFloorNo()) + " floor");
+        System.out.println("Last Car Parking Place: " + carParkingSpotNumber + " at "
+                + OrdinalNumber.getOrdinalNo(floorNo) + " floor");
         System.out.println("Last Car Entry Time: " + TimeFormat.getTime(carEntryExit.getEntryTime()));
         System.out.println("Last Car Exit Time: " + TimeFormat.getTime(carEntryExit.getExitTime()));
     }
 
     @Override
-    public void emptyCarParkingPlace(CarLocation position) {
-        System.out.println("\nEmpty Car Parking is available in " + position.getCarParkingPlace().getCarParkingSpotNumber()
-                + " on " + OrdinalNumber.getOrdinalNo(position.getFloorNo()) + " floor");
+    public void emptyCarParkingPlace(int carParkingSpotNumber, int floorNo) {
+        System.out.println("\nEmpty Car Parking is available in " + carParkingSpotNumber
+                + " on " + OrdinalNumber.getOrdinalNo(floorNo) + " floor");
     }
 
     @Override
@@ -54,18 +48,12 @@ public class DataPrinterImpl implements DataPrinter {
     }
 
     @Override
-    public void printParkingAvailableFloors(MultiFloorCarParking obj) {
-        ArrayList<Integer> indexArray = obj.getParkingAvailableFloors();
+    public void printParkingAvailableFloors(ArrayList<Integer> indexArray) {
         System.out.println();
         for (Integer j: indexArray) {
             if(j == 0) System.out.println("Floor " + (j) + " (Ground Floor)");
             else System.out.println("Floor " + (j));
         }
-    }
-
-    @Override
-    public void askCorrectFormatOfParkingPlace() {
-        System.out.println("\nPlease Enter correct format ");
     }
 
     @Override
@@ -101,21 +89,11 @@ public class DataPrinterImpl implements DataPrinter {
         if(time2 == null ) System.out.print("00:00:00");
         else System.out.print(TimeFormat.getTime(time2));
         System.out.print(" - ");
-        System.out.print( pos.getCarParkingPlace().getCarParkingSpotNumber() + " in " + OrdinalNumber.getOrdinalNo(pos.getFloorNo()) + " floor - ");
+        System.out.print( pos.getCarParkingSpot().getCarParkingSpotNumber() + " in " +
+                OrdinalNumber.getOrdinalNo(pos.getFloorNo()) + " floor - ");
         BillingSystem billing = carEntryExit.getBilling();
-        System.out.printf("%.2f" + " " + BillingSystem.moneyAbbr, billing.getBill());
+        System.out.printf(" %s", billing.getBillingSummary());
         System.out.println();
-    }
-
-    @Override
-    public void showCarInformation(Car car) {
-        String carNo = car.getCarNumber();
-        String carBrand = car.getCarBrand();
-        String carModel = car.getCarModel();
-        System.out.println("\nCar Information:");
-        System.out.println("Car Number: " + carNo);
-        System.out.println("Car Brand: " + carBrand);
-        System.out.println("Car Model Number: " + carModel);
     }
 
     @Override

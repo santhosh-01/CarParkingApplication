@@ -1,33 +1,29 @@
-package service;
+package impl;
 
-import database.CarEntryExitTable;
-import database.CarInParking;
-import model.*;
-import util.OrdinalNumber;
+import core.*;
 
 import java.util.ArrayList;
 
-public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities {
+public class AppFunctionalities {
 
     private final CarParking carParking;
 
     private final MultiFloorCarParking obj;
     private final ArrayList<ParkingLot> arr;
 
-    public CarParkingFunctionalitiesImpl(MultiFloorCarParking obj, CarParking carParking){
+    public AppFunctionalities(MultiFloorCarParking obj, CarParking carParking){
         this.obj = obj;
         arr = this.obj.getParkingLots();
         this.carParking = carParking;
     }
 
-    @Override
-    public void generateReceipt(ParkingLot parkingLot, CarParkingPlace pos, Car car, ParkingCell parkingCell) {
+    public void generateReceipt(ParkingLot parkingLot, CarParkingSpot pos, Car car, ParkingCell parkingCell) {
         hashLine();
         carParking.parkACar(parkingLot,pos,car);
 
         carParking.generatePathToParkACar(parkingLot,pos);
 
-        System.out.println("\nCar Parking Place : " + parkingCell.getPosition() + " at " +
+        System.out.println("\nCar Parking Place : " + parkingCell.getParkingSpotNumber() + " at " +
                 OrdinalNumber.getOrdinalNo(parkingLot.getFloorNo()) + " floor");
 
         System.out.println("\nCar Number " + car.getCarNumber() + " parked successfully in " +
@@ -36,14 +32,16 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
         hashLine();
     }
 
-    @Override
-    public void generateBill(CarInParking carInParking, ParkingLot parkingLot, CarParkingPlace pos, Car car,
-                             ParkingCell parkingCell, BillingFunctionalities billingFunctionalities,ParkingHistory parkingHistory) {
+    public void generateBill(CarInParking carInParking, ParkingLot parkingLot, CarParkingSpot pos, Car car,
+                             ParkingCell parkingCell ,ParkingHistory parkingHistory) {
         hashLine();
-        System.out.println("\nCar Parking Place : " + parkingCell.getPosition()  + " at " +
+        System.out.println("\nCar Parking Place : " + parkingCell.getParkingSpotNumber()  + " at " +
                 OrdinalNumber.getOrdinalNo(parkingLot.getFloorNo()) + " floor");
 
         CarExit carExit = new CarExit();
+
+        carExit.generatePathToExitACar(obj,parkingLot,pos);
+
         parkingCell = carExit.exitACarFromPosition(carInParking,parkingLot,pos,car);
 
         CarEntryExit carEntryExit = parkingHistory.getLastCarEntryExitByCar(parkingCell,car);
@@ -51,9 +49,7 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
         System.out.println();
         System.out.println("Billing : ");
         System.out.println("---------");
-        System.out.println(billingFunctionalities.generateBill(carEntryExit,parkingCell,car).toString());
-
-        carExit.generatePathToExitACar(obj,parkingLot,pos);
+        System.out.println(carExit.generateBill(carEntryExit,parkingCell,car).toString());
 
         System.out.println("\nCar Number " + car.getCarNumber() + " removed successfully from " +
                 OrdinalNumber.getOrdinalNo(parkingLot.getFloorNo()) + " floor ");
@@ -61,30 +57,27 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
         hashLine();
     }
 
-    @Override
     public void showAllParkingSlots() {
         hashLine();
-        for (int i = obj.floors - 1; i >= 0; --i) {
-            System.out.println("\nFloor Map of " + OrdinalNumber.getOrdinalNo(i) + " Floor");
-            arr.get(i).showParkingLot(i == 0);
+        for (int i = obj.getFloors() - 1; i >= 0; --i) {
+            System.out.println("\nFloor Map of " + OrdinalNumber.getOrdinalNo(i) + " Floor\n");
+            System.out.println(arr.get(i).getParkingLotMap(i == 0));
         }
         hashLine();
     }
 
-    @Override
     public void showAllDetailedParkingSlots() {
         hashLine();
-        for (int i = obj.floors - 1; i >= 0; --i) {
-            System.out.println("\nDetailed Floor Map of " + OrdinalNumber.getOrdinalNo(i) + " Floor");
-            arr.get(i).showModifiedParkingLot(i == 0);
+        for (int i = obj.getFloors() - 1; i >= 0; --i) {
+            System.out.println("\nDetailed Floor Map of " + OrdinalNumber.getOrdinalNo(i) + " Floor\n");
+            System.out.println(arr.get(i).getModifiedParkingLotMap(i == 0));
         }
         hashLine();
     }
 
-    @Override
-    public void getCarInfoAndParkingHistory(Car car, DataPrinter dataPrinter, ParkingHistory parkingHistory) {
+    public void getCarInfoAndParkingHistory(Car car, ParkingHistory parkingHistory) {
         hashLine();
-        dataPrinter.showCarInformation(car);
+        showCarInformation(car);
         System.out.println("\nParking History:");
         if(!parkingHistory.showCarParkingHistory(car)) {
             System.out.println("No Parking History Available");
@@ -92,15 +85,20 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
         hashLine();
     }
 
-    @Override
-    public void getBillingHistoryByCarNumber(BillingFunctionalities billingFunctionalities, String carNo) {
+    private void showCarInformation(Car car) {
+        System.out.println("\nCar Information:");
+        System.out.println("Car Number: " + car.getCarNumber());
+        System.out.println("Car Brand: " + car.getCarBrand());
+        System.out.println("Car Model Number: " + car.getCarModel());
+    }
+
+    public void getBillingHistoryByCarNumber(ParkingHistory parkingHistory, String carNo) {
         hashLine();
         System.out.println("\nBilling History:");
-        System.out.println();
-        ArrayList<BillingSystem> billings = billingFunctionalities.getBillingsByCarNo(carNo);
+        ArrayList<BillingSystem> billings = parkingHistory.getBillingsByCarNo(carNo);
         for (BillingSystem billing:billings) {
-            System.out.println(billing.toString());
             System.out.println();
+            System.out.println(billing.toString());
         }
         hashLine();
     }
@@ -110,7 +108,7 @@ public class CarParkingFunctionalitiesImpl implements CarParkingFunctionalities 
 
     private void hashLine() {
         System.out.println();
-        System.out.println("#".repeat(170));
+        System.out.println(StringFormatter.getCharLine('#',172));
     }
 
 }

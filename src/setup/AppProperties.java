@@ -5,16 +5,16 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
-public class PropertiesClass {
+public class AppProperties {
 
     private int floors;
     private int rows;
     private int columns;
     private int pathWidth;
-    private String path;
+    private String drivingSide;
     private double billingAmountPerHour;
 
-    public PropertiesClass(String filePath) {
+    public AppProperties(String filePath) {
         setPropertiesFromFile(filePath);
     }
 
@@ -35,7 +35,7 @@ public class PropertiesClass {
             rows = Integer.parseInt(prop.getProperty("noOfRows"));
             columns = Integer.parseInt(prop.getProperty("noOfColumns"));
             pathWidth = Integer.parseInt(prop.getProperty("pathWidth"));
-            path = prop.getProperty("path");
+            drivingSide = prop.getProperty("drivingSide");
             billingAmountPerHour = Integer.parseInt(prop.getProperty("billingAmountPerHour"));
         }
     }
@@ -56,8 +56,8 @@ public class PropertiesClass {
         return pathWidth;
     }
 
-    public String getPath() {
-        return path;
+    public String getDrivingSide() {
+        return drivingSide;
     }
 
     public double getBillingAmountPerHour() {

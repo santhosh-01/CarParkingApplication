@@ -1,50 +1,44 @@
-package service;
+package navigator;
 
-import database.CarEntryExitTable;
-import database.CarInParking;
-import database.CarTable;
-import model.*;
-import util.Validator;
+import impl.AppFunctionalities;
+import impl.DataPrinterImpl;
+import impl.DataProviderImpl;
+import core.*;
 
 import java.util.Scanner;
 
 public class CarParkingMenu {
 
     private final Scanner in;
-    private final CarParkingMessage message;
 
     private final CarInParking carInParking;
 
     private final MultiFloorCarParking multiFloorCarParking;
-    private final CarParkingFunctionalities appFunctionalities;
-    private final BillingFunctionalities billingFunctionalities;
+    private final AppFunctionalities appFunctionalities;
     private final ParkingHistory parkingHistory;
     private final DataHandler dataHandler;
-    private final DataPrinter dataPrinter;
     private final CarParking carParking;
 
-    public CarParkingMenu(PropertiesDataClass prop) {
+    public CarParkingMenu(AppData prop) {
         in = new Scanner(System.in);
 
         CarTable carTable = new CarTable();
         carInParking = new CarInParking();
         CarEntryExitTable carEntryExitTable = new CarEntryExitTable();
 
-        message = new CarParkingMessage();
         DataProvider dataProvider = new DataProviderImpl();
-        dataPrinter = new DataPrinterImpl();
+        DataPrinter dataPrinter = new DataPrinterImpl();
         multiFloorCarParking = new MultiFloorCarParking(prop);
-        billingFunctionalities = new BillingFunctionalities(carEntryExitTable);
-        parkingHistory = new ParkingHistory(carTable,dataProvider,dataPrinter,carEntryExitTable);
+        parkingHistory = new ParkingHistory(carTable,dataProvider, dataPrinter,carEntryExitTable);
 
-        dataHandler = new DataHandler(multiFloorCarParking,dataProvider,dataPrinter,carTable,carInParking,carEntryExitTable);
-        carParking = new CarParking(multiFloorCarParking, dataProvider,dataPrinter, carTable, carInParking, carEntryExitTable);
-        appFunctionalities = new CarParkingFunctionalitiesImpl(multiFloorCarParking,carParking);
+        dataHandler = new DataHandler(multiFloorCarParking,dataProvider, dataPrinter,carTable,carInParking,carEntryExitTable);
+        carParking = new CarParking(multiFloorCarParking, dataProvider, dataPrinter, carInParking, carEntryExitTable);
+        appFunctionalities = new AppFunctionalities(multiFloorCarParking,carParking);
     }
 
     public void showMenu() {
         while (true) {
-            message.showMenu();
+            getMenu();
             String ch = in.nextLine().trim();
             int choice = Validator.validateInteger(ch,1,7);
             if(choice == -1) continue;
@@ -60,16 +54,15 @@ public class CarParkingMenu {
                 CarLocation carLocation = carParking.checkAndSuggestLastCarParkingPlace(car);
                 if(carLocation != null) {
                     ParkingLot parkingLot = multiFloorCarParking.getParkingLots().get(carLocation.getFloorNo());
-                    CarParkingPlace pos = carLocation.getCarParkingPlace();
+                    CarParkingSpot pos = carLocation.getCarParkingSpot();
                     ParkingCell parkingCell = parkingLot.getParkingCellByPosition(pos.getRow(),pos.getCol());
-                    appFunctionalities.generateReceipt(parkingLot,carLocation.getCarParkingPlace(),car,parkingCell);
+                    appFunctionalities.generateReceipt(parkingLot,carLocation.getCarParkingSpot(),car,parkingCell);
                     continue;
                 }
                 ParkingLot parkingLot = carParking.suggestAndGetCarParkingLot();
-                CarParkingPlace pos = carParking.suggestAndGetParkingPlace(parkingLot);
+                CarParkingSpot pos = carParking.suggestAndGetParkingSpot(parkingLot);
                 ParkingCell parkingCell = parkingLot.getParkingCellByPosition(pos.getRow(),pos.getCol());
-                carLocation = new CarLocation(pos,parkingLot.getFloorNo());
-                appFunctionalities.generateReceipt(parkingLot,carLocation.getCarParkingPlace(),car,parkingCell);
+                appFunctionalities.generateReceipt(parkingLot,pos,car,parkingCell);
             }
             else if(choice == 2) {
                 Car car = dataHandler.acceptCarDetailsToExit();
@@ -77,9 +70,9 @@ public class CarParkingMenu {
                 String carNo = car.getCarNumber();
                 if(!dataHandler.confirmCarDetailsForExit(car)) continue;
                 ParkingLot parkingLot = multiFloorCarParking.getParkingLotWithCarNumber(carNo);
-                CarParkingPlace pos = parkingLot.getCarNumberPosition(carNo);
+                CarParkingSpot pos = parkingLot.getCarNumberParkingSpot(carNo);
                 ParkingCell parkingCell = parkingLot.getParkingCellByPosition(pos.getRow(),pos.getCol());
-                appFunctionalities.generateBill(carInParking,parkingLot,pos,car,parkingCell,billingFunctionalities,parkingHistory);
+                appFunctionalities.generateBill(carInParking,parkingLot,pos,car,parkingCell,parkingHistory);
             }
             else if(choice == 3) {
                 appFunctionalities.showAllParkingSlots();
@@ -90,17 +83,29 @@ public class CarParkingMenu {
             else if(choice == 5) {
                 Car car = parkingHistory.getValidCarInParkingHistory();
                 if(car == null) continue;
-                appFunctionalities.getCarInfoAndParkingHistory(car,dataPrinter,parkingHistory);
+                appFunctionalities.getCarInfoAndParkingHistory(car,parkingHistory);
             }
             else if(choice == 6) {
                 String carNo = parkingHistory.getValidCarNumberInParkingHistory();
                 if(carNo == null) continue;
-                appFunctionalities.getBillingHistoryByCarNumber(billingFunctionalities, carNo);
+                appFunctionalities.getBillingHistoryByCarNumber(parkingHistory, carNo);
             }
             else if(choice == 7){
                 break;
             }
         }
+    }
+
+    private void getMenu() {
+        System.out.println("\nMenu");
+        System.out.println("1. Entry a Car");
+        System.out.println("2. Exit the Car");
+        System.out.println("3. Show Floor Maps");
+        System.out.println("4. Show Detailed Floor Maps");
+        System.out.println("5. Car History");
+        System.out.println("6. Billing History");
+        System.out.println("7. Quit Application");
+        System.out.print("Please Choose any of the above option: ");
     }
 
 }

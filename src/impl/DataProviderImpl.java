@@ -1,21 +1,18 @@
-package service;
+package impl;
 
-import model.BillingSystem;
-import model.Car;
-import model.ParkingLot;
-import util.OrdinalNumber;
+import core.*;
 
 import java.util.Scanner;
 
-public class DataProviderImpl implements DataProvider{
+public class DataProviderImpl implements DataProvider {
 
     private final Scanner in = new Scanner(System.in);
 
     @Override
-    public boolean billingAmountAcceptance() {
+    public boolean billingAmountAcceptance(double billingAmountPerHour, String moneyAbbr) {
         while (true) {
-            System.out.println("\nBilling Amount for parking a car: " + BillingSystem.billingAmountPerHour
-                    + " " + BillingSystem.moneyAbbr + " per hour");
+            System.out.println("\nBilling Amount for parking a car: " + billingAmountPerHour
+                    + " " + moneyAbbr + " per hour");
             System.out.print("Are you going to park a car? (Yes / No): ");
             String choice = in.nextLine().trim();
             if(choice.equalsIgnoreCase("yes")) return true;
@@ -26,7 +23,7 @@ public class DataProviderImpl implements DataProvider{
     }
 
     @Override
-    public String getCarModel() {
+    public String takeCarModelInput() {
         String carModel;
         System.out.print("Enter Car Model Number: ");
         carModel = in.nextLine().trim();
@@ -41,7 +38,7 @@ public class DataProviderImpl implements DataProvider{
     }
 
     @Override
-    public String getCarBrand() {
+    public String takeCarBrandInput() {
         String carBrand;
         System.out.print("Enter Car Brand: ");
         carBrand = in.nextLine().trim();
@@ -56,7 +53,7 @@ public class DataProviderImpl implements DataProvider{
     }
 
     @Override
-    public String getCarNumber() {
+    public String takeCarNumberInput() {
         String carNo;
         System.out.print("\nEnter Car Number(should be less than or equal to 5 characters): ");
         carNo = in.nextLine().trim();
@@ -100,9 +97,9 @@ public class DataProviderImpl implements DataProvider{
     }
 
     @Override
-    public String getCarParkingPlace(ParkingLot parkingLot) {
-        System.out.println("\nDetailed Floor Map of " + OrdinalNumber.getOrdinalNo(parkingLot.getFloorNo()) + " Floor");
-        parkingLot.showModifiedParkingLot(true);
+    public String takeCarParkingSpotInput(int floorNo, String modifiedParkingLotMap) {
+        System.out.println("\nDetailed Floor Map of " + OrdinalNumber.getOrdinalNo(floorNo) + " Floor\n");
+        System.out.println(modifiedParkingLotMap);
         System.out.print("Select any one Empty Parking Place : ");
         return in.nextLine().trim();
     }
@@ -114,17 +111,11 @@ public class DataProviderImpl implements DataProvider{
     }
 
     @Override
-    public String givenCarConfirmation(Car car) {
-        System.out.println("\nCar Number: " + car.getCarNumber());
-        System.out.println("Car Brand: " + car.getCarBrand());
-        System.out.println("Car Model Number: " + car.getCarModel());
+    public String givenCarConfirmation(String carNumber, String carBrand, String carModel) {
+        System.out.println("\nCar Number: " + carNumber);
+        System.out.println("Car Brand: " + carBrand);
+        System.out.println("Car Model Number: " + carModel);
         System.out.print("Do you want the car with above details to exit? (Yes / No) ");
-        return in.nextLine().trim();
-    }
-
-    @Override
-    public String getBackChoice() {
-        System.out.println("If you want to move back to main menu, Enter 'b'");
         return in.nextLine().trim();
     }
 
