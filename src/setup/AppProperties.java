@@ -31,12 +31,38 @@ public class AppProperties {
             System.out.println("Property File is not loaded!");
         }
         if(prop != null) {
-            floors = Integer.parseInt(prop.getProperty("noOfFloors"));
-            rows = Integer.parseInt(prop.getProperty("noOfRows"));
-            columns = Integer.parseInt(prop.getProperty("noOfColumns"));
-            pathWidth = Integer.parseInt(prop.getProperty("pathWidth"));
+            try {
+                floors = Integer.parseInt(prop.getProperty("noOfFloors"));
+            }
+            catch (NumberFormatException e) {
+                floors = 1;
+            }
+            try {
+                rows = Integer.parseInt(prop.getProperty("noOfRows"));
+            }
+            catch (NumberFormatException e) {
+                rows = 1;
+            }
+            try {
+                columns = Integer.parseInt(prop.getProperty("noOfColumns"));
+            }
+            catch (NumberFormatException e) {
+                columns = 1;
+            }
+            try {
+                pathWidth = Integer.parseInt(prop.getProperty("pathWidth"));
+            }
+            catch (NumberFormatException e) {
+                pathWidth = 1;
+            }
             drivingSide = prop.getProperty("drivingSide");
-            billingAmountPerHour = Integer.parseInt(prop.getProperty("billingAmountPerHour"));
+            if(drivingSide == null) drivingSide = "L";
+            try {
+                billingAmountPerHour = Integer.parseInt(prop.getProperty("billingAmountPerHour"));
+            }
+            catch (NumberFormatException e) {
+                billingAmountPerHour = 100.0;
+            }
         }
     }
 
